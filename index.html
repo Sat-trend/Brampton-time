@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India to Brampton Time Converter</title>
+<style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .container { max-width: 400px; margin: auto; text-align: center; }
+    input, select, button { margin: 10px 0; padding: 8px; font-size: 16px; }
+    #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>India to Brampton Time Converter</h2>
+    <label>Optional Date:</label><br>
+    <input type="date" id="dateInput"><br>
+    <label>Enter India Time:</label><br>
+    <input type="number" id="hours" placeholder="HH" min="1" max="12"> :
+    <input type="number" id="minutes" placeholder="MM" min="0" max="59">
+    <select id="period">
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+    </select><br>
+    <button onclick="convertTime()">Convert</button>
+    <div id="result"></div>
+</div>
+
+<script>
+function convertTime() {
+    let dateValue = document.getElementById("dateInput").value;
+    let hours = parseInt(document.getElementById("hours").value);
+    let minutes = parseInt(document.getElementById("minutes").value);
+    let period = document.getElementById("period").value;
+
+    if (isNaN(hours) || isNaN(minutes) || hours < 1 || hours > 12 || minutes < 0 || minutes > 59) {
+        document.getElementById("result").innerText = "Please enter valid time!";
+        return;
+    }
+
+    // Convert to 24-hour format
+    if (period === "PM" && hours !== 12) hours += 12;
+    if (period === "AM" && hours === 12) hours = 0;
+
+    // If date not provided, use today's date (India)
+    let indiaDateTime;
+    if (dateValue) {
+        indiaDateTime = new Date(dateValue + "T" + String(hours).padStart(2,'0') + ":" + String(minutes).padStart(2,'0') + ":00");
+    } else {
+        indiaDateTime = new Date();
+        indiaDateTime.setHours(hours);
+        indiaDateTime.setMinutes(minutes);
+    }
+
+    // Subtract 9 hours 30 mins (IST to Brampton DST)
+    indiaDateTime.setHours(indiaDateTime.getHours() - 9);
+    indiaDateTime.setMinutes(indiaDateTime.getMinutes() - 30);
+
+    // Get day name and format
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    let dayName = days[indiaDateTime.getDay()];
+
+    // Extract hours, minutes, AM/PM
+    let bramptonHours = indiaDateTime.getHours();
+    let bramptonMinutes = indiaDateTime.getMinutes();
+    let bramptonPeriod = bramptonHours >= 12 ? "PM" : "AM";
+    if (bramptonHours === 0) bramptonHours = 12;
+    else if (bramptonHours > 12) bramptonHours -= 12;
+
+    // Format date
+    let bramptonDate = indiaDateTime.toISOString().split("T")[0];
+
+    document.getElementById("result").innerText =
+        Brampton: ${dayName}, ${bramptonDate}, ${bramptonHours}:${bramptonMinutes.toString().padStart(2, '0')} ${bramptonPeriod};
+}
+</script>
+</body>
+</html>
