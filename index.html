@@ -71,9 +71,10 @@ function convertTime() {
     // Format date
     let bramptonDate = indiaDateTime.toISOString().split("T")[0];
 
-    document.getElementById("result").innerText =
-        Brampton: ${dayName}, ${bramptonDate}, ${bramptonHours}:${bramptonMinutes.toString().padStart(2, '0')} ${bramptonPeriod};
+     document.getElementById("result").innerText =
+                `Brampton: ${dayName}, ${bramptonDate}, ${bramptonHours}:${bramptonMinutes.toString().padStart(2, '0')} ${bramptonPeriod}`;
 }
 </script>
 </body>
+
 </html>
